@@ -3,9 +3,11 @@ package com.example.homework3.Fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,8 +23,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.ConsoleHandler;
 
-public class UsersFragment extends Fragment {
+public class UsersFragment extends Fragment implements UserAdapter.OnItemClick {
 
     private RecyclerView usersRecyclerView;
     private List<User> users;
@@ -46,7 +49,16 @@ public class UsersFragment extends Fragment {
             users = gson.fromJson(jsonString, listUserType);
 
             usersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            adapter = new UserAdapter(users);
+            adapter = new UserAdapter(users, this);
             usersRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onUserClick(int position) {
+        User user = users.get(position);
+        /*FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.add(R.layout.fragment_todo, new TodoFragment());
+        transaction.commit();*/
+        Log.d("click", "click");
     }
 }
