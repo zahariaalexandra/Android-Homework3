@@ -7,29 +7,28 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.homework3.Entities.User;
 import com.example.homework3.R;
+import com.example.homework3.Utils.OnItemClick;
+import com.example.homework3.Utils.RecyclerTouchListener;
 import com.example.homework3.Utils.UserAdapter;
 import com.example.homework3.Utils.Utils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.ConsoleHandler;
 
-public class UsersFragment extends Fragment implements UserAdapter.OnItemClick {
+public class UsersFragment extends Fragment {
 
     private RecyclerView usersRecyclerView;
     private List<User> users;
-    private RecyclerView.Adapter<UserAdapter.ViewHolder> adapter;
+    private UserAdapter adapter;
+    private RecyclerView.LayoutManager manager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +37,17 @@ public class UsersFragment extends Fragment implements UserAdapter.OnItemClick {
 
         usersRecyclerView = view.findViewById(R.id.usersRecyclerView);
         populateUsersRecyclerView();
+
+        usersRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity(), usersRecyclerView, new OnItemClick() {
+            @Override
+            public void onItemClick(View view, int position) {
+                User user = users.get(position);
+
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentFrame, new ToDosFragment(user));
+                transaction.commit();
+            }
+        }));
 
         return view;
     }
@@ -48,17 +58,9 @@ public class UsersFragment extends Fragment implements UserAdapter.OnItemClick {
             Type listUserType = new TypeToken<List<User>>() { }.getType();
             users = gson.fromJson(jsonString, listUserType);
 
-            usersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-            adapter = new UserAdapter(users, this);
+            manager = new LinearLayoutManager(getActivity());
+            usersRecyclerView.setLayoutManager(manager);
+            adapter = new UserAdapter(users);
             usersRecyclerView.setAdapter(adapter);
-    }
-
-    @Override
-    public void onUserClick(int position) {
-        User user = users.get(position);
-        /*FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.add(R.layout.fragment_todo, new TodoFragment());
-        transaction.commit();*/
-        Log.d("click", "click");
     }
 }

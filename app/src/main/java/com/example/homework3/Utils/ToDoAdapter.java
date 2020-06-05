@@ -8,18 +8,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.homework3.Entities.User;
+import com.example.homework3.Entities.ToDo;
 import com.example.homework3.R;
 
 import java.util.List;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
+public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.ViewHolder> {
 
-    private List<User> users;
+    private List<ToDo> toDos;
     private OnItemClick onClick;
 
-    public UserAdapter(List<User> users) {
-        this.users = users;
+    public ToDoAdapter(List<ToDo> toDos) {
+        this.toDos = toDos;
     }
 
     public void setOnClick(OnItemClick onClick) {
@@ -29,27 +29,27 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_view_holder, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.todo_view_holder, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        holder.name.setText(users.get(position).getName());
+        holder.toDo.setText(toDos.get(position).getTitle());
     }
 
     @Override
     public int getItemCount() {
-        return users.size();
+        return toDos.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name;
+        TextView toDo;
 
         ViewHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.txtName);
+            toDo = itemView.findViewById(R.id.txtTitle);
         }
     }
 
